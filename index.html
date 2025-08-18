@@ -15,8 +15,8 @@
     :root {
       --bg-1: #0b1221;
       --bg-2: #0e1730;
-      --primary: #86e2ff;
-      --primary-strong: #34c0f9;
+      --primary: #7b68ee;
+      --primary-strong: #6a57e0;
       --accent: #ff8bd1;
       --ok: #58e1a3;
       --warning: #ffd166;
@@ -100,9 +100,9 @@
     .btn { cursor: pointer; border: none; border-radius: 12px; padding: 12px 16px; font-weight: 600; transition: .25s ease; }
     .btn-primary {
       background: linear-gradient(180deg, var(--primary) 0%, var(--primary-strong) 100%);
-      color: #04121a; box-shadow: 0 8px 18px rgba(52,192,249,.35), inset 0 1px 0 rgba(255,255,255,.6);
+      color: #ffffff; box-shadow: 0 8px 18px rgba(123,104,238,.35), inset 0 1px 0 rgba(255,255,255,.6);
     }
-    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(52,192,249,.45), inset 0 1px 0 rgba(255,255,255,.7); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(123,104,238,.45), inset 0 1px 0 rgba(255,255,255,.7); }
     .btn-ghost { background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,.18); }
     .btn-ghost:hover { background: rgba(255,255,255,.06); }
 
@@ -125,11 +125,13 @@
     .price-card { padding: 22px; display: grid; gap: 14px; }
     .badge { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: #04121a; background: linear-gradient(180deg, #a2e2ff, #66cdfc); padding: 6px 10px; border-radius: 20px; }
     .price-row { display: flex; align-items: baseline; gap: 12px; }
-    .price-value { font-size: 40px; font-weight: 800; letter-spacing: -1px; }
+    .price-value { font-size: 40px; font-weight: 800; letter-spacing: -1px; display: inline-flex; align-items: center; }
     .price-prev { color: var(--muted); text-decoration: line-through; }
     .ticker { display: inline-flex; align-items: center; gap: 8px; color: var(--warning); font-weight: 700; font-variant-numeric: tabular-nums; }
     .meter { height: 8px; width: 100%; background: rgba(255,255,255,.08); border-radius: 999px; overflow: hidden; }
-    .meter > span { display: block; height: 100%; background: linear-gradient(90deg, #ff8bd1, #86e2ff); width: 65%; transition: width .5s ease; }
+    .meter > span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--primary)); width: 65%; transition: width .5s ease; }
+    .price-currency { color: var(--primary); line-height: 0; display: inline-flex; align-items: center; }
+    .price-currency svg { width: 22px; height: 22px; display: block; }
 
     .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
     .stat { padding: 14px; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); text-align: center; }
@@ -197,9 +199,9 @@
       <a class="brand" href="#top" aria-label="Tajweer home">
         <span class="logo" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 16c4-6 10-8 16-8" stroke="#86e2ff" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M4 16c4-6 10-8 16-8" stroke="#7b68ee" stroke-width="2.2" stroke-linecap="round"/>
             <path d="M4 19c5-1 11-1 16-1" stroke="#ff8bd1" stroke-width="2.2" stroke-linecap="round"/>
-            <circle cx="20" cy="7" r="1.6" fill="#86e2ff"/>
+            <circle cx="20" cy="7" r="1.6" fill="#7b68ee"/>
           </svg>
         </span>
         <strong>Tajweer</strong>
@@ -236,8 +238,16 @@
         </span>
         <div>
           <div class="price-row">
-            <div class="price-value" id="livePrice">$149</div>
-            <div class="price-prev" id="prevPrice">$199</div>
+            <div class="price-value" id="livePrice">
+              <span class="price-currency" aria-hidden="true">
+                <svg viewBox="0 0 1124.14 1256.39" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                  <path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"/>
+                  <path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"/>
+                </svg>
+              </span>
+              <span id="livePriceAmount">149</span>
+            </div>
+            <div class="price-prev"><span id="prevPriceAmount">199</span></div>
           </div>
           <div class="ticker" id="ticker">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 6v6l4 2" stroke="#ffd166" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -439,9 +449,9 @@
       <div style="display:flex; align-items:center; gap:10px;">
         <span class="logo" aria-hidden="true">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 16c4-6 10-8 16-8" stroke="#86e2ff" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M4 16c4-6 10-8 16-8" stroke="#7b68ee" stroke-width="2.2" stroke-linecap="round"/>
             <path d="M4 19c5-1 11-1 16-1" stroke="#ff8bd1" stroke-width="2.2" stroke-linecap="round"/>
-            <circle cx="20" cy="7" r="1.6" fill="#86e2ff"/>
+            <circle cx="20" cy="7" r="1.6" fill="#7b68ee"/>
           </svg>
         </span>
         <strong>Tajweer</strong>
@@ -480,14 +490,14 @@
       interval: null,
       countdown: null
     };
-    const priceEl = document.getElementById('livePrice');
-    const prevEl = document.getElementById('prevPrice');
+    const priceAmountEl = document.getElementById('livePriceAmount');
+    const prevAmountEl = document.getElementById('prevPriceAmount');
     const cdEl = document.getElementById('countdown');
     const meter = document.getElementById('meterSpan');
 
     function render() {
-      priceEl.textContent = `$${state.current}`;
-      prevEl.textContent = `$${state.previous}`;
+      priceAmountEl.textContent = state.current;
+      prevAmountEl.textContent = state.previous;
       const pct = Math.max(6, Math.round(((state.current - state.min) / (state.previous - state.min)) * 100));
       meter.style.width = pct + '%';
     }
