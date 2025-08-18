@@ -430,6 +430,7 @@
         <h2 id="cta-title" class="section-title" style="margin:0">Be first to the drop</h2>
         <p class="section-lead" style="margin:0">Join the early access list to get launch updates and exclusive beta invites.</p>
         <form id="waitlistForm" action="https://formsubmit.co/khalid.mued@gmail.com" method="POST" class="actions" aria-label="Join waitlist">
+          <input type="hidden" name="_next" value="/" />
           <input type="hidden" name="_subject" value="New Tajweer waitlist signup" />
           <input type="hidden" name="_captcha" value="false" />
           <input type="hidden" name="_template" value="table" />
@@ -438,6 +439,7 @@
           <input id="email" name="email" type="email" required placeholder="you@company.com" aria-label="Email address" style="padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,.18); background: rgba(5,10,20,.6); color: var(--text); min-width:260px; outline: none;">
           <button class="btn btn-primary" type="submit">Notify me</button>
         </form>
+        <iframe id="waitlistFrame" name="waitlistFrame" style="display:none"></iframe>
         <small style="color:var(--muted)">We’ll only email about Tajweer. No spam, unsubscribe anytime.</small>
       </div>
     </div>
@@ -530,58 +532,32 @@
 
     window.addEventListener('DOMContentLoaded', boot);
 
-    // Intercept waitlist form submission to avoid redirect and show feedback in button
+    // No-redirect form post via hidden iframe, with button feedback
     window.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('waitlistForm');
+      const frame = document.getElementById('waitlistFrame');
       const emailInput = document.getElementById('email');
-      if (!form) return;
+      if (!form || !frame) return;
+      form.setAttribute('target', 'waitlistFrame');
 
-      form.addEventListener('submit', async (event) => {
-        event.preventDefault();
+      form.addEventListener('submit', () => {
         const submitBtn = form.querySelector('button[type="submit"]');
-        const originalText = submitBtn ? submitBtn.textContent : '';
         if (submitBtn) {
           submitBtn.disabled = true;
           submitBtn.textContent = 'Sending...';
         }
+      });
 
-        try {
-          const endpoint = form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
-          const formData = new FormData(form);
-          const payload = {};
-          formData.forEach((value, key) => { payload[key] = value; });
-          const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-
-          if (response.ok) {
-            if (submitBtn) submitBtn.textContent = 'Thanks! You’re on the list';
-            if (emailInput) emailInput.value = '';
-            // keep success text for a bit, then revert and re-enable
-            setTimeout(() => {
-              if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = originalText || 'Notify me';
-              }
-            }, 2200);
-            return;
-          }
-
-          // Non-200
-          if (submitBtn) submitBtn.textContent = 'Please try again';
-        } catch (error) {
-          if (submitBtn) submitBtn.textContent = 'Network error';
-        } finally {
-          // If not success path, revert shortly
+      frame.addEventListener('load', () => {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) submitBtn.textContent = 'Thanks! You’re on the list';
+        if (emailInput) emailInput.value = '';
+        setTimeout(() => {
           if (submitBtn) {
-            setTimeout(() => {
-              submitBtn.disabled = false;
-              submitBtn.textContent = originalText || 'Notify me';
-            }, 1600);
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Notify me';
           }
-        }
+        }, 2200);
       });
     });
   </script>
