@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tajweer — Smart Descending-Price Marketplace</title>
+  <meta name="description" content="Tajweer is a digital auction-style marketplace where prices drop automatically until sold. Win-win for sellers and buyers." />
+  <meta property="og:title" content="Tajweer — Smart Descending-Price Marketplace" />
+  <meta property="og:description" content="Move overstock fast with automated price drops. Buyers get authentic deals, sellers reduce waste and storage costs." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0b1221" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='64' fill='%230E1726'/%3E%3Cpath d='M64 156c36-48 92-64 128-64' fill='none' stroke='%23A2E2FF' stroke-width='20' stroke-linecap='round'/%3E%3Cpath d='M64 180c36-10 76-10 128-10' fill='none' stroke='%23FF8BD1' stroke-width='20' stroke-linecap='round'/%3E%3Ccircle cx='192' cy='92' r='12' fill='%23A2E2FF'/%3E%3C/svg%3E" />
+
+  <style>
+    :root {
+      --bg-1: #0b1221;
+      --bg-2: #0e1730;
+      --primary: #86e2ff;
+      --primary-strong: #34c0f9;
+      --accent: #ff8bd1;
+      --ok: #58e1a3;
+      --warning: #ffd166;
+      --text: #d7e0f0;
+      --muted: #9aa7bd;
+      --elev-1: rgba(255, 255, 255, 0.06);
+      --elev-2: rgba(255, 255, 255, 0.08);
+      --glass: rgba(13, 22, 45, 0.6);
+      --maxw: 1200px;
+      --radius: 16px;
+      --radius-sm: 12px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 700px at 80% -10%, #112044 0%, transparent 60%),
+                  radial-gradient(900px 600px at -10% 20%, #1a355a 0%, transparent 60%),
+                  linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    /* Decorative aurora */
+    .aurora {
+      position: fixed;
+      inset: -20vmax;
+      pointer-events: none;
+      background: radial-gradient(60vmax 40vmax at 70% 20%, rgba(134,226,255,.12), transparent 60%),
+                  radial-gradient(50vmax 35vmax at 30% 70%, rgba(255,139,209,.10), transparent 60%),
+                  radial-gradient(55vmax 30vmax at 10% 10%, rgba(88,225,163,.08), transparent 60%);
+      filter: blur(40px) saturate(120%);
+      animation: float 26s ease-in-out infinite alternate;
+      z-index: -1;
+    }
+    @keyframes float {
+      0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+      100% { transform: translate3d(2%, -1%, 0) rotate(3deg); }
+    }
+
+    /* Subtle grid */
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(80% 50% at 50% 35%, rgba(0,0,0,1), rgba(0,0,0,0));
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .container { width: min(100%, var(--maxw)); margin-inline: auto; padding: 0 24px; }
+
+    /* Navbar */
+    .nav {
+      position: sticky;
+      top: 0; z-index: 50;
+      backdrop-filter: saturate(160%) blur(8px);
+      background: linear-gradient(to bottom, rgba(11,18,33,.9), rgba(11,18,33,.6));
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 0;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
+    .logo {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: grid; place-items: center;
+      background: linear-gradient(145deg, #0f1a2c, #152441);
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow);
+    }
+    .brand strong { font-weight: 700; letter-spacing: .3px; }
+    .nav-cta { display: flex; align-items: center; gap: 10px; }
+    .btn { cursor: pointer; border: none; border-radius: 12px; padding: 12px 16px; font-weight: 600; transition: .25s ease; }
+    .btn-primary {
+      background: linear-gradient(180deg, var(--primary) 0%, var(--primary-strong) 100%);
+      color: #04121a; box-shadow: 0 8px 18px rgba(52,192,249,.35), inset 0 1px 0 rgba(255,255,255,.6);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(52,192,249,.45), inset 0 1px 0 rgba(255,255,255,.7); }
+    .btn-ghost { background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,.18); }
+    .btn-ghost:hover { background: rgba(255,255,255,.06); }
+
+    /* Hero */
+    .hero { padding: 80px 0 40px; position: relative; }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 36px; align-items: center; }
+    .eyebrow { color: var(--primary); font-weight: 700; letter-spacing: .2em; font-size: 12px; text-transform: uppercase; }
+    h1 { font-size: clamp(40px, 5vw, 64px); line-height: 1.08; margin: 8px 0 12px; }
+    .lead { color: var(--muted); font-size: clamp(16px, 2vw, 20px); max-width: 60ch; }
+    .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+
+    .glass {
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    /* Price card */
+    .price-card { padding: 22px; display: grid; gap: 14px; }
+    .badge { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: #04121a; background: linear-gradient(180deg, #a2e2ff, #66cdfc); padding: 6px 10px; border-radius: 20px; }
+    .price-row { display: flex; align-items: baseline; gap: 12px; }
+    .price-value { font-size: 40px; font-weight: 800; letter-spacing: -1px; }
+    .price-prev { color: var(--muted); text-decoration: line-through; }
+    .ticker { display: inline-flex; align-items: center; gap: 8px; color: var(--warning); font-weight: 700; font-variant-numeric: tabular-nums; }
+    .meter { height: 8px; width: 100%; background: rgba(255,255,255,.08); border-radius: 999px; overflow: hidden; }
+    .meter > span { display: block; height: 100%; background: linear-gradient(90deg, #ff8bd1, #86e2ff); width: 65%; transition: width .5s ease; }
+
+    .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .stat { padding: 14px; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); text-align: center; }
+    .stat strong { display: block; font-size: 18px; }
+    .stat span { color: var(--muted); font-size: 12px; }
+
+    /* Sections */
+    section { padding: 70px 0; }
+    .section-title { font-size: clamp(28px, 3vw, 40px); margin: 0 0 8px; }
+    .section-lead { color: var(--muted); margin: 0 0 28px; }
+
+    /* Cards grid */
+    .grid { display: grid; gap: 18px; }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+    .card { padding: 20px; border-radius: var(--radius-sm); background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); box-shadow: var(--shadow); }
+    .card h3 { margin: 0 0 6px; }
+    .card p { margin: 0; color: var(--muted); }
+
+    .icon { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 10px; margin-bottom: 10px; }
+    .icon.pink { background: linear-gradient(180deg, #ffb1e2, #ff8bd1); color: #491a3a; }
+    .icon.cyan { background: linear-gradient(180deg, #c3f1ff, #86e2ff); color: #093042; }
+    .icon.green { background: linear-gradient(180deg, #a8f3cc, #58e1a3); color: #043924; }
+    .icon.yellow { background: linear-gradient(180deg, #ffe8a9, #ffd166); color: #4a3700; }
+
+    /* Target audience lists */
+    .list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+    .list li { display: flex; align-items: center; gap: 10px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(180deg, #c3f1ff, #86e2ff); box-shadow: 0 0 0 3px rgba(134,226,255,.15); }
+
+    /* Tech stack badges */
+    .badges { display: flex; flex-wrap: wrap; gap: 10px; }
+    .badge-tech { padding: 10px 12px; border: 1px solid rgba(255,255,255,.14); border-radius: 12px; background: rgba(255,255,255,.05); display: inline-flex; gap: 10px; align-items: center; }
+    .badge-tech svg { width: 18px; height: 18px; opacity: .9; }
+
+    /* CTA banner */
+    .cta { display: grid; gap: 16px; padding: 26px; text-align: center; border: 1px solid rgba(255,255,255,.12); background: linear-gradient(180deg, rgba(134,226,255,.1), rgba(255,255,255,.05)); }
+    .cta .actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+    /* Footer */
+    footer { padding: 40px 0 60px; color: var(--muted); border-top: 1px solid rgba(255,255,255,.08); background: linear-gradient(to top, rgba(255,255,255,.04), transparent); }
+
+    /* Reveal on scroll */
+    .reveal { opacity: 0; transform: translateY(18px); transition: .6s cubic-bezier(.2,.8,.2,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero { padding-top: 56px; }
+      .hero-stats { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="grid-overlay" aria-hidden="true"></div>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#top" aria-label="Tajweer home">
+        <span class="logo" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 16c4-6 10-8 16-8" stroke="#86e2ff" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M4 19c5-1 11-1 16-1" stroke="#ff8bd1" stroke-width="2.2" stroke-linecap="round"/>
+            <circle cx="20" cy="7" r="1.6" fill="#86e2ff"/>
+          </svg>
+        </span>
+        <strong>Tajweer</strong>
+      </a>
+      <div class="nav-cta">
+        <button class="btn btn-ghost" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Features</button>
+        <button class="btn btn-primary" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Get Early Access</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header id="top" class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow">Smart descending-price marketplace</div>
+        <h1>Move overstock fast with automated price drops</h1>
+        <p class="lead">Tajweer helps brands and retailers sell slow-moving inventory using a dynamic, time-based pricing model. Buyers get genuine products at time-sensitive discounts, while sellers reduce waste and storage costs.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Join the waitlist</button>
+          <button class="btn btn-ghost" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">See how it works</button>
+        </div>
+        <div class="hero-stats" style="margin-top:18px">
+          <div class="stat"><strong>Automated</strong><span>Price drops until sold or min price</span></div>
+          <div class="stat"><strong>Verified</strong><span>Listings from trusted merchants</span></div>
+          <div class="stat"><strong>Real-time</strong><span>Analytics and notifications</span></div>
+        </div>
+      </div>
+
+      <aside class="glass price-card reveal" aria-live="polite">
+        <span class="badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12l4 4L19 6" stroke="#0b3b4d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Live demo
+        </span>
+        <div>
+          <div class="price-row">
+            <div class="price-value" id="livePrice">$149</div>
+            <div class="price-prev" id="prevPrice">$199</div>
+          </div>
+          <div class="ticker" id="ticker">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 6v6l4 2" stroke="#ffd166" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Next drop in <span id="countdown">02</span>s
+          </div>
+        </div>
+        <div class="meter" aria-hidden="true"><span id="meterSpan" style="width:64%"></span></div>
+        <p style="color:var(--muted); margin:0">Smart drops nudge buyers to act while protecting seller margins.</p>
+      </aside>
+    </div>
+  </header>
+
+  <!-- How it works -->
+  <section id="how">
+    <div class="container">
+      <h2 class="section-title">How Tajweer works</h2>
+      <p class="section-lead">A dynamic, gamified buying experience built for real retail constraints.</p>
+      <div class="grid grid-3">
+        <div class="card reveal">
+          <div class="icon cyan" aria-hidden="true">⏳</div>
+          <h3>Automated Price Drops</h3>
+          <p>Start high, drop to a configured minimum over time. Inventory moves, recovery improves.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon yellow" aria-hidden="true">🔔</div>
+          <h3>Smart Notifications</h3>
+          <p>Track items and get alerts when they hit your target price. Never miss a deal.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon green" aria-hidden="true">✅</div>
+          <h3>Verified Listings</h3>
+          <p>Trusted merchants and authorized sellers only. Authentic products, real savings.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature grid -->
+  <section id="features">
+    <div class="container">
+      <h2 class="section-title">Built for both sellers and buyers</h2>
+      <p class="section-lead">Real-time dashboards, analytics, and controls that make liquidation modern and data-driven.</p>
+
+      <div class="grid grid-2">
+        <div class="card reveal">
+          <div class="icon cyan" aria-hidden="true">📈</div>
+          <h3>User Dashboard</h3>
+          <p>Monitor performance, conversion, and revenue recovery with live analytics.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon pink" aria-hidden="true">🧭</div>
+          <h3>Flexible Controls</h3>
+          <p>Set initial price, drop frequency, and minimums per listing to match your strategy.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon yellow" aria-hidden="true">🧠</div>
+          <h3>Pricing Intelligence</h3>
+          <p>Smart defaults and insights help you choose effective price floors and schedules.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon green" aria-hidden="true">🛡️</div>
+          <h3>Fraud Safety</h3>
+          <p>Merchant verification, listing audits, and buyer protections for platform trust.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Target Audience -->
+  <section>
+    <div class="container">
+      <h2 class="section-title">Who it's for</h2>
+      <p class="section-lead">Tajweer serves both sides of the marketplace with clear incentives.</p>
+      <div class="grid grid-2">
+        <div class="card reveal">
+          <div class="icon cyan" aria-hidden="true">🏷️</div>
+          <h3>Sellers</h3>
+          <ul class="list">
+            <li><span class="dot" aria-hidden="true"></span>Retail brands</li>
+            <li><span class="dot" aria-hidden="true"></span>Distributors</li>
+            <li><span class="dot" aria-hidden="true"></span>E-commerce stores</li>
+            <li><span class="dot" aria-hidden="true"></span>Warehouses</li>
+            <li><span class="dot" aria-hidden="true"></span>Liquidation centers</li>
+          </ul>
+        </div>
+        <div class="card reveal">
+          <div class="icon pink" aria-hidden="true">🛒</div>
+          <h3>Buyers</h3>
+          <ul class="list">
+            <li><span class="dot" aria-hidden="true"></span>Deal seekers</li>
+            <li><span class="dot" aria-hidden="true"></span>Budget-conscious shoppers</li>
+            <li><span class="dot" aria-hidden="true"></span>Trend-aware online consumers</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Revenue Model -->
+  <section>
+    <div class="container">
+      <h2 class="section-title">Revenue model</h2>
+      <p class="section-lead">Multiple channels for sustainable growth.</p>
+      <div class="grid grid-3">
+        <div class="card reveal">
+          <div class="icon yellow" aria-hidden="true">💳</div>
+          <h3>Transaction Commission</h3>
+          <p>Per-sale fee aligned with successful liquidations.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon cyan" aria-hidden="true">📦</div>
+          <h3>Subscriptions & Listings</h3>
+          <p>Plans and listing fees for advanced features and volume needs.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon pink" aria-hidden="true">⭐</div>
+          <h3>Promotions</h3>
+          <p>Paid product placement, featured spots, and boosts.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Competitive Advantage -->
+  <section>
+    <div class="container">
+      <h2 class="section-title">Why Tajweer wins</h2>
+      <p class="section-lead">Urgency + transparency = an engaging, modern buying experience.</p>
+      <div class="grid grid-3">
+        <div class="card reveal">
+          <div class="icon green" aria-hidden="true">♻️</div>
+          <h3>Reduce Waste</h3>
+          <p>Sellers move unsold stock and cut storage costs, faster.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon cyan" aria-hidden="true">⚡</div>
+          <h3>Engage Buyers</h3>
+          <p>Real-time drops and alerts keep buyers coming back.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon pink" aria-hidden="true">🎯</div>
+          <h3>Data-Driven</h3>
+          <p>Transparent mechanics with analytics for confident decisions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technology Stack -->
+  <section>
+    <div class="container">
+      <h2 class="section-title">Technology stack</h2>
+      <p class="section-lead">Built for performance and scale.</p>
+      <div class="card reveal">
+        <div class="badges">
+          <span class="badge-tech" title="Flutter">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 4L4 14l3 3 10-10-3-3z" fill="#86e2ff"/><path d="M7 17l3 3 10-10-3-3L7 17z" fill="#34c0f9"/></svg>
+            Frontend: Flutter
+          </span>
+          <span class="badge-tech" title="FastAPI">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="#58e1a3" stroke-width="2"/><path d="M8 12h8" stroke="#58e1a3" stroke-width="2"/></svg>
+            Backend: FastAPI
+          </span>
+          <span class="badge-tech" title="PostgreSQL">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="8" rx="8" ry="4" stroke="#a2c0ff"/><path d="M4 8v8c0 2 3.6 4 8 4s8-2 8-4V8" stroke="#a2c0ff"/></svg>
+            Database: PostgreSQL
+          </span>
+          <span class="badge-tech" title="Docker">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="4" height="3" fill="#86e2ff"/><rect x="7" y="11" width="4" height="3" fill="#86e2ff"/><rect x="11" y="11" width="4" height="3" fill="#86e2ff"/><rect x="7" y="8" width="4" height="3" fill="#34c0f9"/><path d="M2 15h20c-1 3-4 5-9 5H9c-5 0-7-2-7-5z" fill="#34c0f9"/></svg>
+            Containerization: Docker
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="waitlist">
+    <div class="container">
+      <div class="cta glass reveal" role="region" aria-labelledby="cta-title">
+        <h2 id="cta-title" class="section-title" style="margin:0">Be first to the drop</h2>
+        <p class="section-lead" style="margin:0">Join the early access list to get launch updates and exclusive beta invites.</p>
+        <form action="https://formsubmit.co/khalid.mued@gmail.com" method="POST" class="actions" aria-label="Join waitlist">
+          <input type="hidden" name="_subject" value="New Tajweer waitlist signup" />
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+          <label for="email" class="visually-hidden">Email</label>
+          <input id="email" name="email" type="email" required placeholder="you@company.com" aria-label="Email address" style="padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,.18); background: rgba(5,10,20,.6); color: var(--text); min-width:260px; outline: none;">
+          <button class="btn btn-primary" type="submit">Notify me</button>
+        </form>
+        <small style="color:var(--muted)">We’ll only email about Tajweer. No spam, unsubscribe anytime.</small>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="logo" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 16c4-6 10-8 16-8" stroke="#86e2ff" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M4 19c5-1 11-1 16-1" stroke="#ff8bd1" stroke-width="2.2" stroke-linecap="round"/>
+            <circle cx="20" cy="7" r="1.6" fill="#86e2ff"/>
+          </svg>
+        </span>
+        <strong>Tajweer</strong>
+      </div>
+      <div style="display:flex; gap:14px; color:var(--muted);">
+        <a href="#features" style="color:inherit; text-decoration:none">Features</a>
+        <a href="#how" style="color:inherit; text-decoration:none">How it works</a>
+        <a href="#waitlist" style="color:inherit; text-decoration:none">Waitlist</a>
+      </div>
+      <small style="color:var(--muted)">© <span id="year"></span> Tajweer. All rights reserved.</small>
+    </div>
+  </footer>
+
+  <script>
+    // Reveal on scroll
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      }
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Live price drop demo
+    const state = {
+      current: 149,
+      previous: 199,
+      min: 79,
+      step: 5,
+      seconds: 2,
+      interval: null,
+      countdown: null
+    };
+    const priceEl = document.getElementById('livePrice');
+    const prevEl = document.getElementById('prevPrice');
+    const cdEl = document.getElementById('countdown');
+    const meter = document.getElementById('meterSpan');
+
+    function render() {
+      priceEl.textContent = `$${state.current}`;
+      prevEl.textContent = `$${state.previous}`;
+      const pct = Math.max(6, Math.round(((state.current - state.min) / (state.previous - state.min)) * 100));
+      meter.style.width = pct + '%';
+    }
+
+    function startCountdown() {
+      let t = state.seconds;
+      cdEl.textContent = String(t).padStart(2, '0');
+      clearInterval(state.countdown);
+      state.countdown = setInterval(() => {
+        t -= 1;
+        cdEl.textContent = String(Math.max(0, t)).padStart(2, '0');
+        if (t <= 0) {
+          clearInterval(state.countdown);
+        }
+      }, 1000);
+    }
+
+    function drop() {
+      if (state.current > state.min) {
+        state.current = Math.max(state.min, state.current - state.step);
+        render();
+        startCountdown();
+      } else {
+        clearInterval(state.interval);
+        cdEl.textContent = '—';
+      }
+    }
+
+    function boot() {
+      render();
+      startCountdown();
+      clearInterval(state.interval);
+      state.interval = setInterval(drop, state.seconds * 1000);
+    }
+
+    window.addEventListener('DOMContentLoaded', boot);
+  </script>
+</body>
+</html> 
