@@ -15,9 +15,10 @@
   <meta property="og:description" content="Move overstock fast with automated price drops. Buyers get authentic deals, sellers reduce waste and storage costs." />
   <meta property="og:type" content="website" />
   <meta name="theme-color" content="#0b1221" />
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/logo.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/logo.png" />
-  <link rel="apple-touch-icon" href="assets/logo.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/logo.png?v=2" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/logo.png?v=2" />
+  <link rel="apple-touch-icon" href="assets/logo.png?v=2" />
+  <link rel="shortcut icon" href="assets/logo.png?v=2" />
 
   <style>
     :root {
@@ -156,9 +157,9 @@
     .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
     .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
     .logo { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center;
-      background: linear-gradient(145deg, #0f1a2c, #152441); border: 1px solid rgba(255,255,255,.08); box-shadow: var(--shadow);
+      background: transparent; border: none; box-shadow: none;
     }
-    .logo img { width: 80%; height: 80%; object-fit: contain; display: block; filter: drop-shadow(0 2px 6px rgba(123,104,238,.35)); }
+    .logo img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 10px; }
     .brand strong { font-weight: 700; letter-spacing: .3px; }
     .nav-cta { display: flex; align-items: center; gap: 10px; }
     .btn { cursor: pointer; border: none; border-radius: 12px; padding: 12px 16px; font-weight: 600; transition: .25s ease; }
@@ -542,54 +543,6 @@
           <p data-lang="en">Transparent mechanics with analytics for confident decisions.</p>
           <h3 data-lang="ar">قرارات مبنية على بيانات</h3>
           <p data-lang="ar">آليات واضحة مع تحليلات تعطيك قرار واثق.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Technology Stack -->
-  <section>
-    <div class="container">
-      <h2 class="section-title" data-lang="en">Technology stack</h2>
-      <p class="section-lead" data-lang="en">Built for performance and scale.</p>
-      <h2 class="section-title" data-lang="ar">المكدس التقني</h2>
-      <p class="section-lead" data-lang="ar">مبني للأداء والتوسّع.</p>
-      <div class="card reveal">
-        <div class="badges">
-          <!-- EN badges -->
-          <span class="badge-tech" title="Flutter" data-lang="en">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 4L4 14l3 3 10-10-3-3z" fill="#86e2ff"/><path d="M7 17l3 3 10-10-3-3L7 17z" fill="#34c0f9"/></svg>
-            Frontend: Flutter
-          </span>
-          <span class="badge-tech" title="FastAPI" data-lang="en">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="#58e1a3" stroke-width="2"/><path d="M8 12h8" stroke="#58e1a3" stroke-width="2"/></svg>
-            Backend: FastAPI
-          </span>
-          <span class="badge-tech" title="PostgreSQL" data-lang="en">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="8" rx="8" ry="4" stroke="#a2c0ff"/><path d="M4 8v8c0 2 3.6 4 8 4s8-2 8-4V8" stroke="#a2c0ff"/></svg>
-            Database: PostgreSQL
-          </span>
-          <span class="badge-tech" title="Docker" data-lang="en">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="4" height="3" fill="#86e2ff"/><rect x="7" y="11" width="4" height="3" fill="#86e2ff"/><rect x="11" y="11" width="4" height="3" fill="#86e2ff"/><rect x="7" y="8" width="4" height="3" fill="#34c0f9"/><path d="M2 15h20c-1 3-4 5-9 5H9c-5 0-7-2-7-5z" fill="#34c0f9"/></svg>
-            Containerization: Docker
-          </span>
-          <!-- AR badges -->
-          <span class="badge-tech" title="Flutter" data-lang="ar">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 4L4 14l3 3 10-10-3-3z" fill="#86e2ff"/><path d="M7 17l3 3 10-10-3-3L7 17z" fill="#34c0f9"/></svg>
-            الواجهة الأمامية: Flutter
-          </span>
-          <span class="badge-tech" title="FastAPI" data-lang="ar">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="#58e1a3" stroke-width="2"/><path d="M8 12h8" stroke="#58e1a3" stroke-width="2"/></svg>
-            الخلفية: FastAPI
-          </span>
-          <span class="badge-tech" title="PostgreSQL" data-lang="ar">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="8" rx="8" ry="4" stroke="#a2c0ff"/><path d="M4 8v8c0 2 3.6 4 8 4s8-2 8-4V8" stroke="#a2c0ff"/></svg>
-            قاعدة البيانات: PostgreSQL
-          </span>
-          <span class="badge-tech" title="Docker" data-lang="ar">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="4" height="3" fill="#86e2ff"/><rect x="7" y="11" width="4" height="3" fill="#86e2ff"/><rect x="11" y="11" width="4" height="3" fill="#86e2ff"/><rect x="7" y="8" width="4" height="3" fill="#34c0f9"/><path d="M2 15h20c-1 3-4 5-9 5H9c-5 0-7-2-7-5z" fill="#34c0f9"/></svg>
-            الحاويات: Docker
-          </span>
         </div>
       </div>
     </div>
