@@ -22,26 +22,6 @@
 
   <style>
     :root {
-      --bg-1: #0b1221;
-      --bg-2: #0e1730;
-      --primary: #7b68ee;
-      --primary-strong: #6a57e0;
-      --accent: #ff8bd1;
-      --ok: #58e1a3;
-      --warning: #ffd166;
-      --text: #d7e0f0;
-      --muted: #9aa7bd;
-      --elev-1: rgba(255, 255, 255, 0.06);
-      --elev-2: rgba(255, 255, 255, 0.08);
-      --glass: rgba(13, 22, 45, 0.6);
-      --maxw: 1200px;
-      --radius: 16px;
-      --radius-sm: 12px;
-      --shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
-    }
-
-    /* Light mode variables */
-    [data-theme="light"] {
       --bg-1: #ffffff;
       --bg-2: #f8fafc;
       --primary: #7b68ee;
@@ -54,7 +34,27 @@
       --elev-1: rgba(0, 0, 0, 0.06);
       --elev-2: rgba(0, 0, 0, 0.08);
       --glass: rgba(255, 255, 255, 0.8);
+      --maxw: 1200px;
+      --radius: 16px;
+      --radius-sm: 12px;
       --shadow: 0 10px 30px rgba(0,0,0,.1), inset 0 1px 0 rgba(255,255,255,.8);
+    }
+
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --bg-1: #0b1221;
+      --bg-2: #0e1730;
+      --primary: #7b68ee;
+      --primary-strong: #6a57e0;
+      --accent: #ff8bd1;
+      --ok: #58e1a3;
+      --warning: #ffd166;
+      --text: #d7e0f0;
+      --muted: #9aa7bd;
+      --elev-1: rgba(255, 255, 255, 0.06);
+      --elev-2: rgba(255, 255, 255, 0.08);
+      --glass: rgba(13, 22, 45, 0.6);
+      --shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
     }
 
     /* Language visibility (critical) */
@@ -84,9 +84,9 @@
       overflow-x: hidden;
       transition: background 0.3s ease, color 0.3s ease;
     }
-    [data-theme="light"] body {
-      background: radial-gradient(1200px 700px at 80% -10%, rgba(123, 104, 238, 0.1) 0%, transparent 60%),
-                  radial-gradient(900px 600px at -10% 20%, rgba(255, 139, 209, 0.1) 0%, transparent 60%),
+    [data-theme="dark"] body {
+      background: radial-gradient(1200px 700px at 80% -10%, rgba(17, 32, 68, 0.8) 0%, transparent 60%),
+                  radial-gradient(900px 600px at -10% 20%, rgba(26, 53, 90, 0.8) 0%, transparent 60%),
                   linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
     }
 
@@ -107,17 +107,50 @@
       background: rgba(255,255,255,.06);
       border-color: rgba(255,255,255,.25);
     }
-    [data-theme="light"] .theme-toggle, [data-theme="light"] .lang-toggle {
-      border-color: rgba(0,0,0,.18); color: var(--text);
+    [data-theme="dark"] .theme-toggle, [data-theme="dark"] .lang-toggle {
+      border-color: rgba(255,255,255,.18); color: var(--text);
     }
-    [data-theme="light"] .theme-toggle:hover, [data-theme="light"] .lang-toggle:hover {
-      background: rgba(0,0,0,.06); border-color: rgba(0,0,0,.25);
+    [data-theme="dark"] .theme-toggle:hover, [data-theme="dark"] .lang-toggle:hover {
+      background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.25);
+    }
+    [data-theme="dark"] .btn-ghost { 
+      border-color: rgba(255,255,255,.18); 
+    }
+    [data-theme="dark"] .btn-ghost:hover { 
+      background: rgba(255,255,255,.06); 
+    }
+    [data-theme="dark"] .glass {
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.14);
+    }
+    [data-theme="dark"] .card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+    }
+    [data-theme="dark"] .stat {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    [data-theme="dark"] .badge-tech {
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+    }
+    [data-theme="dark"] .cta {
+      border: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(134,226,255,.1), rgba(255,255,255,.05));
+    }
+    [data-theme="dark"] footer {
+      border-top: 1px solid rgba(255,255,255,.08);
+      background: linear-gradient(to top, rgba(255,255,255,.04), transparent);
+    }
+    [data-theme="dark"] .meter {
+      background: rgba(255,255,255,.08);
     }
     .theme-toggle svg { width: 18px; height: 18px; transition: .3s ease; }
-    .theme-toggle .sun { display: none; }
-    .theme-toggle .moon { display: block; }
-    [data-theme="light"] .theme-toggle .sun { display: block; }
-    [data-theme="light"] .theme-toggle .moon { display: none; }
+    .theme-toggle .sun { display: block; }
+    .theme-toggle .moon { display: none; }
+    [data-theme="dark"] .theme-toggle .sun { display: none; }
+    [data-theme="dark"] .theme-toggle .moon { display: block; }
     .lang-toggle .lang-text { font-weight: 700; letter-spacing: .3px; font-size: 12px; text-transform: uppercase; }
 
     /* Decorative aurora */
@@ -129,7 +162,7 @@
       filter: blur(40px) saturate(120%); animation: float 26s ease-in-out infinite alternate;
       z-index: -1; transition: opacity 0.3s ease;
     }
-    [data-theme="light"] .aurora { opacity: 0.3; }
+    [data-theme="dark"] .aurora { opacity: 1; }
     @keyframes float { 0% { transform: translate3d(0, 0, 0) rotate(0deg); } 100% { transform: translate3d(2%, -1%, 0) rotate(3deg); } }
 
     /* Subtle grid */
@@ -141,18 +174,18 @@
       mask-image: radial-gradient(80% 50% at 50% 35%, rgba(0,0,0,1), rgba(0,0,0,0));
       pointer-events: none; z-index: -1; transition: opacity 0.3s ease;
     }
-    [data-theme="light"] .grid-overlay { opacity: 0.3; }
+    [data-theme="dark"] .grid-overlay { opacity: 1; }
 
     .container { width: min(100%, var(--maxw)); margin-inline: auto; padding: 0 24px; }
 
     /* Navbar */
     .nav { position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(160%) blur(8px);
-      background: linear-gradient(to bottom, rgba(11,18,33,.9), rgba(11,18,33,.6));
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-    [data-theme="light"] .nav {
       background: linear-gradient(to bottom, rgba(255,255,255,.95), rgba(255,255,255,.85));
       border-bottom: 1px solid rgba(0,0,0,.08);
+    }
+    [data-theme="dark"] .nav {
+      background: linear-gradient(to bottom, rgba(11,18,33,.9), rgba(11,18,33,.6));
+      border-bottom: 1px solid rgba(255,255,255,.06);
     }
     .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
     .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
@@ -168,8 +201,8 @@
       color: #ffffff; box-shadow: 0 8px 18px rgba(123,104,238,.35), inset 0 1px 0 rgba(255,255,255,.6);
     }
     .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(123,104,238,.45), inset 0 1px 0 rgba(255,255,255,.7); }
-    .btn-ghost { background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,.18); }
-    .btn-ghost:hover { background: rgba(255,255,255,.06); }
+    .btn-ghost { background: transparent; color: var(--text); border: 1px solid rgba(0,0,0,.18); }
+    .btn-ghost:hover { background: rgba(0,0,0,.06); }
 
     /* Hero */
     .hero { padding: 80px 0 40px; position: relative; }
@@ -180,8 +213,8 @@
     .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
 
     .glass {
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.03));
+      border: 1px solid rgba(0,0,0,.14);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
     }
@@ -193,13 +226,13 @@
     .price-value { font-size: 40px; font-weight: 800; letter-spacing: -1px; display: inline-flex; align-items: center; gap: 8px; }
     .price-prev { color: var(--muted); text-decoration: line-through; }
     .ticker { display: inline-flex; align-items: center; gap: 8px; color: var(--warning); font-weight: 700; font-variant-numeric: tabular-nums; }
-    .meter { height: 8px; width: 100%; background: rgba(255,255,255,.08); border-radius: 999px; overflow: hidden; }
+    .meter { height: 8px; width: 100%; background: rgba(0,0,0,.08); border-radius: 999px; overflow: hidden; }
     .meter > span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--primary)); width: 65%; transition: width .5s ease; }
     .price-currency { color: var(--primary); line-height: 0; display: inline-flex; align-items: center; }
     .price-currency svg { width: 22px; height: 22px; display: block; }
 
     .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .stat { padding: 14px; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); text-align: center; }
+    .stat { padding: 14px; border-radius: 12px; background: rgba(0,0,0,.04); border: 1px solid rgba(0,0,0,.08); text-align: center; }
     .stat strong { display: block; font-size: 18px; }
     .stat span { color: var(--muted); font-size: 12px; }
 
@@ -213,7 +246,7 @@
     .grid-3 { grid-template-columns: repeat(3, 1fr); }
     .grid-2 { grid-template-columns: repeat(2, 1fr); }
 
-    .card { padding: 20px; border-radius: var(--radius-sm); background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); box-shadow: var(--shadow); }
+    .card { padding: 20px; border-radius: var(--radius-sm); background: rgba(0,0,0,.04); border: 1px solid rgba(0,0,0,.1); box-shadow: var(--shadow); }
     .card h3 { margin: 0 0 6px; }
     .card p { margin: 0; color: var(--muted); }
 
@@ -230,15 +263,15 @@
 
     /* Tech stack badges */
     .badges { display: flex; flex-wrap: wrap; gap: 10px; }
-    .badge-tech { padding: 10px 12px; border: 1px solid rgba(255,255,255,.14); border-radius: 12px; background: rgba(255,255,255,.05); display: inline-flex; gap: 10px; align-items: center; }
+    .badge-tech { padding: 10px 12px; border: 1px solid rgba(0,0,0,.14); border-radius: 12px; background: rgba(0,0,0,.05); display: inline-flex; gap: 10px; align-items: center; }
     .badge-tech svg { width: 18px; height: 18px; opacity: .9; }
 
     /* CTA banner */
-    .cta { display: grid; gap: 16px; padding: 26px; text-align: center; border: 1px solid rgba(255,255,255,.12); background: linear-gradient(180deg, rgba(134,226,255,.1), rgba(255,255,255,.05)); }
+    .cta { display: grid; gap: 16px; padding: 26px; text-align: center; border: 1px solid rgba(0,0,0,.12); background: linear-gradient(180deg, rgba(134,226,255,.1), rgba(0,0,0,.05)); }
     .cta .actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 
     /* Footer */
-    footer { padding: 40px 0 60px; color: var(--muted); border-top: 1px solid rgba(255,255,255,.08); background: linear-gradient(to top, rgba(255,255,255,.04), transparent); }
+    footer { padding: 40px 0 60px; color: var(--muted); border-top: 1px solid rgba(0,0,0,.08); background: linear-gradient(to top, rgba(0,0,0,.04), transparent); }
 
     /* Reveal on scroll */
     .reveal { opacity: 0; transform: translateY(18px); transition: .6s cubic-bezier(.2,.8,.2,1); }
@@ -482,38 +515,7 @@
     </div>
   </section>
 
-  <!-- Revenue Model -->
-  <section>
-    <div class="container">
-      <h2 class="section-title" data-lang="en">Revenue model</h2>
-      <p class="section-lead" data-lang="en">Multiple channels for sustainable growth.</p>
-      <h2 class="section-title" data-lang="ar">نموذج الإيرادات</h2>
-      <p class="section-lead" data-lang="ar">قنوات متعددة لنمو مستدام.</p>
-      <div class="grid grid-3">
-        <div class="card reveal">
-          <div class="icon yellow" aria-hidden="true">💳</div>
-          <h3 data-lang="en">Transaction Commission</h3>
-          <p data-lang="en">Per-sale fee aligned with successful liquidations.</p>
-          <h3 data-lang="ar">عمولة على البيع</h3>
-          <p data-lang="ar">رسوم على كل عملية، متوافقة مع تصفية ناجحة.</p>
-        </div>
-        <div class="card reveal">
-          <div class="icon cyan" aria-hidden="true">📦</div>
-          <h3 data-lang="en">Subscriptions & Listings</h3>
-          <p data-lang="en">Plans and listing fees for advanced features and volume needs.</p>
-          <h3 data-lang="ar">اشتراكات وقوائم</h3>
-          <p data-lang="ar">خطط ورسوم إدراج لميزات متقدمة واحتياج كميات.</p>
-        </div>
-        <div class="card reveal">
-          <div class="icon pink" aria-hidden="true">⭐</div>
-          <h3 data-lang="en">Promotions</h3>
-          <p data-lang="en">Paid product placement, featured spots, and boosts.</p>
-          <h3 data-lang="ar">ترقيات مدفوعة</h3>
-          <p data-lang="ar">أماكن مميزة، إبراز ودَفع للمنتجات بشكل مدفوع.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+
 
   <!-- Competitive Advantage -->
   <section>
@@ -566,15 +568,18 @@
           <input type="hidden" name="_template" value="table" />
           <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
           <label for="email" class="visually-hidden">Email</label>
-          <input id="email" name="email" type="email" required placeholder="you@company.com" aria-label="Email address" style="padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,.18); background: rgba(5,10,20,.6); color: var(--text); min-width:260px; outline: none;">
+          <input id="email" name="email" type="email" required placeholder="you@company.com" aria-label="Email address" style="padding:12px 14px; border-radius:10px; border:1px solid rgba(0,0,0,.2); background: rgba(255,255,255,.9); color: var(--text); min-width:260px; outline: none;">
           <style>
-            [data-theme="light"] #email {
-              border-color: rgba(0,0,0,.2) !important;
-              background: rgba(255,255,255,.9) !important;
+            #email::placeholder {
+              color: rgba(0,0,0,.5);
+            }
+            [data-theme="dark"] #email {
+              border-color: rgba(255,255,255,.18) !important;
+              background: rgba(5,10,20,.6) !important;
               color: var(--text) !important;
             }
-            [data-theme="light"] #email::placeholder {
-              color: rgba(0,0,0,.5);
+            [data-theme="dark"] #email::placeholder {
+              color: rgba(255,255,255,.5);
             }
           </style>
           <button class="btn btn-primary" type="submit">Notify me</button>
@@ -700,7 +705,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       const themeToggle = document.getElementById('themeToggle');
       const html = document.documentElement;
-      const savedTheme = localStorage.getItem('theme') || 'dark';
+      const savedTheme = localStorage.getItem('theme') || 'light';
       html.setAttribute('data-theme', savedTheme);
       updateThemeButton(savedTheme);
 
